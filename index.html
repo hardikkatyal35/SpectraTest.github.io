@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SPECTRA</title>
+<style>
+:root{--bg:#e8f1fd;--card:#ffffff;--line:#c5d9f4;--cy:#1d6fe0;--bl:#1d6fe0;--tx:#14263f;--mu:#5a7394;--ok:#15803d;--bad:#dc2626;--wa:#b45309;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--tx);font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+body{min-height:100vh}
+main{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 2px 12px #1d6fe01a}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+h1{margin:0;font-size:clamp(28px,6vw,48px);letter-spacing:2px;color:var(--cy)}
+h2{margin:18px 0 10px;color:var(--cy);letter-spacing:1px}
+.sub{color:var(--mu);margin:6px 0 0}.center{text-align:center}
+label{display:block;margin:16px 0 6px;color:var(--mu);font-size:14px;letter-spacing:1px;text-transform:uppercase}
+input,select{width:100%;padding:13px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--tx);font-size:16px}
+input:focus,select:focus{outline:2px solid var(--cy)}
+.btn{border:0;border-radius:10px;padding:13px 22px;font-size:16px;font-weight:700;cursor:pointer;color:#fff;background:var(--cy);transition:.15s}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.1)}.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.sec{background:#e3eefc;color:var(--tx);border:1px solid var(--line)}.btn.red{background:var(--bad);color:#fff}.btn.sm{padding:7px 12px;font-size:13px}
+.big{width:100%;margin-top:22px;font-size:18px;letter-spacing:2px}
+.err{color:var(--bad);margin-top:10px;min-height:20px}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.timer{font-size:clamp(34px,8vw,56px);font-weight:800;font-variant-numeric:tabular-nums;padding:4px 18px;border-radius:12px;border:2px solid var(--cy);color:var(--cy)}
+.timer.warn{color:var(--wa);border-color:var(--wa)}.timer.urgent{color:var(--bad);border-color:var(--bad);background:#fee2e2}
+@keyframes pulse{to{background:#ef444433;box-shadow:0 0 22px var(--bad)}}
+.bar{height:10px;background:#dbe8fb;border-radius:9px;overflow:hidden;margin:14px 0}.bar i{display:block;height:100%;background:var(--cy);transition:width .3s}
+.grid{display:grid;grid-template-columns:1fr 250px;gap:16px}@media(max-width:760px){.grid{grid-template-columns:1fr}}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:#fff;color:var(--tx);border:1px solid var(--line);border-radius:12px;padding:14px;margin:9px 0;font-size:16px;cursor:pointer;transition:.15s}
+.opt:hover{border-color:var(--cy)}.opt.sel{background:#e3eefc;border-color:var(--cy)}
+.opt b{min-width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#e3eefc;color:var(--cy)}.opt.sel b{background:var(--cy);color:#fff}
+.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.nav button{aspect-ratio:1;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--mu);font-weight:700;cursor:pointer}
+.nav button.ans{background:#1d6fe0;color:#fff;border-color:var(--bl)}.nav button.cur{outline:2px solid var(--cy);color:var(--cy);background:#e3eefc}.nav button.cur.ans{color:#fff;background:#1d6fe0}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;margin-top:18px}
+.warnbar{background:#fef3c7;border:1px solid var(--wa);color:var(--wa);padding:10px 14px;border-radius:10px;margin-bottom:12px}
+.modalbg{position:fixed;inset:0;background:#0a1e3c99;z-index:10;display:grid;place-items:center;padding:14px;overflow:auto}
+.modal{max-width:560px;width:100%;max-height:90vh;overflow:auto}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:16px 0}
+.stat{background:#f3f8ff;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}.stat b{display:block;font-size:28px;color:var(--cy)}.stat span{color:var(--mu);font-size:13px}
+.score{font-size:64px;font-weight:800;color:var(--cy)}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--mu);font-size:12px;text-transform:uppercase}
+.wrap{overflow-x:auto}tr.click{cursor:pointer}tr.click:hover{background:#eef5ff}
+.pill{padding:3px 10px;border-radius:20px;font-weight:700;font-size:12px;white-space:nowrap}.pill.q{background:#22c55e22;color:var(--ok)}.pill.n{background:#ef444422;color:var(--bad)}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}.filters label{margin:0 0 4px}
+.nq{background:#fff;border:1px solid var(--line);border-left:4px solid var(--bad);border-radius:12px;padding:12px;margin:8px 0;cursor:pointer}
+.nq .m{display:flex;flex-wrap:wrap;gap:6px 16px;color:var(--mu);font-size:14px;margin-top:6px}.nq .m b{color:var(--tx)}
+.qa{border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;font-size:14px}.qa.c{border-left:4px solid var(--ok)}.qa.w{border-left:4px solid var(--bad)}.qa.u{border-left:4px solid var(--mu)}
+</style></head><body>
+<main id="app"></main><div id="modal"></div>
+<script>
+/* ============ CONFIG — organizers: change these before deployment ============ */
+const CONFIG={ADMIN_USER:"organizer",ADMIN_PASS:"robotics2026",DEFAULT_QUALIFY:10,DURATION:600};
+/* NOTE: client-side only. Anyone who views the page source can find these; use a real backend for high-stakes events. */
+
+/* ============ QUESTION BANKS — [question, [A,B,C,D], correctLetter] ============ */
+/* !! Correct answers were derived by the developer (no key was supplied). VERIFY before the event. */
+const BANKS={
+"8-9":[
+["A circuit contains an LED, resistor, and battery connected in series. The LED does not glow. Which is the most likely issue to check first?",["Increase the size of the LED","Check the polarity and connections of the LED","Remove the resistor","Add another switch"],"B"],
+["What is the main reason a resistor is generally connected in series with an LED?",["To increase the LED's voltage","To control the current flowing through the LED","To make the LED store electricity","To convert AC into DC"],"B"],
+["Two LEDs are connected in parallel, but one LED is much brighter than the other. What is the most likely explanation?",["LEDs always produce different colours","The LEDs may have different electrical characteristics or current paths","Parallel circuits cannot contain LEDs","The battery automatically changes its voltage for each LED"],"B"],
+["A robot's sensor is working correctly when tested separately, but after connecting it to the complete robot, its readings become unstable whenever the motors start running. What is the most likely explanation?",["The sensor has become permanently damaged","Electrical noise or voltage fluctuations from the motors are affecting the sensor","The robot's wheels are too small","The programming language cannot work with sensors"],"B"],
+["Which statement best explains why a capacitor can be useful in a circuit containing a motor?",["It can help reduce sudden changes or electrical noise in the power supply","It permanently increases the motor's speed","It converts mechanical energy into light","It replaces the microcontroller"],"A"],
+["A line-following robot keeps moving left and right instead of smoothly following the line. Which change would most directly help improve its behaviour?",["Increase the robot's weight","Improve the sensor feedback and motor control","Add more LEDs","Increase the battery size"],"B"],
+["A robot's ultrasonic sensor detects an obstacle, but the robot still moves forward and hits it. Which is the best explanation?",["The sensor detecting something automatically stops the robot","The program may not be correctly processing the sensor's output","The wheels cannot respond to sensors","Ultrasonic sensors only work indoors"],"B"],
+["A robot needs to navigate an unfamiliar environment without a human controlling every movement. Which combination would be most useful?",["Sensors + controller + actuators","Battery + LED + switch","Speaker + resistor + wire","Wheels + decoration + battery"],"A"],
+["A robot successfully detects a wall but turns in the wrong direction. The sensor is working correctly. Which part should you investigate first?",["The robot's colour","The decision-making/control logic","The wheel material only","The battery label"],"B"],
+["Why is feedback important in robotics?",["It allows a robot to compare its current state with the desired state and adjust its actions","It makes the robot physically larger","It eliminates the need for sensors","It allows the robot to work without a program"],"A"],
+["An autonomous robot works perfectly in the laboratory but performs poorly outdoors. Which approach would be most appropriate?",["Assume the robot is permanently defective","Identify environmental factors affecting its sensors and recalibrate or modify the system","Remove all sensors","Increase the robot's decorative features"],"B"],
+["In a robotic system, the motor suddenly stops whenever the robot's controller starts a high-power operation. Which is the most likely cause?",["The robot's wheels are too small","The power supply may not be able to provide enough current","The program has too many comments","The sensor is detecting too much light"],"B"],
+["A robot's sensor gives noisy readings. Which solution would be the most technically appropriate?",["Ignore the sensor completely","Use filtering or averaging techniques in the control system","Increase the robot's physical size","Add more motors"],"B"],
+["Two teams create robots that complete the same task. Team A's robot is faster but frequently makes mistakes. Team B's robot is slower but consistently completes the task correctly. Which conclusion is most appropriate?",["Team A is automatically better because speed is most important","Team B is automatically better because slower robots are more reliable","The better design depends on the requirements and trade-offs of the application","Both designs must be identical"],"C"],
+["A robot suddenly behaves unpredictably after several new sensors are added. The original program worked correctly before the sensors were added. What would be the best troubleshooting strategy?",["Replace the entire robot","Systematically test the new sensors, wiring, power requirements, and software integration","Remove the battery permanently","Increase the motor speed"],"B"]],
+"6-7":[
+["What is the main function of a resistor in an electronic circuit?",["Store electrical energy","Limit the flow of current","Increase voltage","Produce light"],"B"],
+["What is the main difference between a conductor and an insulator?",["A conductor allows electric current to flow easily, while an insulator resists the flow of current","A conductor stores electricity, while an insulator produces electricity","A conductor produces light, while an insulator produces sound","There is no difference between them"],"A"],
+["Which component is commonly used to store electrical charge?",["Resistor","LED","Capacitor","Switch"],"C"],
+["What happens to an LED if it is connected directly to a battery without any current-limiting component?",["It always becomes brighter safely","It may get damaged due to excessive current","Nothing happens","The battery immediately recharges"],"B"],
+["Which of the following is a digital signal?",["A continuously varying temperature reading","A microphone's analog output","A signal represented by HIGH and LOW states","The brightness of sunlight"],"C"],
+["What is the primary purpose of a sensor in a robot?",["To provide information about the environment","To increase the robot's weight","To replace the battery","To make the robot look attractive"],"A"],
+["A robot uses an ultrasonic sensor to avoid obstacles. What does the sensor primarily measure?",["Temperature","Distance","Weight","Voltage"],"B"],
+["A robot's left wheel is moving faster than its right wheel. What is most likely to happen?",["The robot will turn","The robot will stop immediately","The robot will fly","Nothing will change"],"A"],
+["Which part of a typical mobile robot is responsible for executing programmed instructions?",["Chassis","Microcontroller","Wheel","Battery holder"],"B"],
+["A line-following robot moves along a black line on a white surface. Which type of sensor would be most suitable?",["IR/reflective sensor","Temperature sensor","Sound sensor","Humidity sensor"],"A"],
+["You are designing a robot that needs to operate for a longer period without increasing its size. Which would be the most useful approach?",["Use a more efficient motor and reduce unnecessary power consumption","Add more LEDs","Make the wheels heavier","Increase the robot's speed continuously"],"A"],
+["A student changes the amount of voltage supplied to a motor and measures its speed each time. What is the independent variable?",["Motor speed","Voltage supplied","Type of motor","Time taken to conduct the experiment"],"B"],
+["Why is prototyping important in engineering?",["It guarantees that the final product will never fail","It allows designs to be tested and improved before final production","It removes the need for testing","It makes every project cheaper"],"B"],
+["Two robots are designed to perform the same task. Robot A completes it in 10 seconds using 20 W of power, while Robot B completes it in 8 seconds using 40 W. Which statement is most reasonable?",["Robot B is automatically better because it is faster","Robot A is automatically better because it uses less power","The better robot depends on the project's priorities, such as speed and energy efficiency","Both robots are exactly the same"],"C"],
+["You build a robot, but it does not move even though the program appears correct. What would be the best first step in troubleshooting?",["Rewrite the entire program immediately","Check the battery, wiring, power connections, and motor connections","Replace every component","Increase the motor speed in the program"],"B"]]};
+
+/* ============ STORAGE LAYER (swap for a backend later) ============ */
+const L=["A","B","C","D"],N=15;
+const lsGet=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const getResults=()=>lsGet("rc_results",[]),getQual=()=>lsGet("rc_qualify",CONFIG.DEFAULT_QUALIFY);
+const $=id=>document.getElementById(id),app=$("app");
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const mmss=s=>{s=Math.max(0,Math.round(s));return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")};
+
+/* ============ STUDENT ============ */
+let A=null,tick=null,lastResult=null,tabWarn=false,err="";
+function route(){
+  clearInterval(tick);closeModal();
+  if(location.hash.startsWith("#/admin"))return adminView();
+  A=lsGet("rc_active",null);
+  if(A&&!A.done){startTimer();return renderTest()}
+  lastResult?renderResult():renderHome();
+}
+function renderHome(){
+  app.innerHTML=`<div class="card center" style="max-width:520px;margin:6vh auto"><h1>SPECTRA</h1>
+  <p class="sub">Test Your Robotics &amp; STEM Knowledge</p>
+  <div style="text-align:left"><label>Student Name</label><input id="nm" maxlength="60" placeholder="Enter your full name" autocomplete="off">
+  <label>Class</label><select id="cl"><option value="">Select Class</option><option>6</option><option>7</option><option>8</option><option>9</option></select>
+  <div class="err" id="er">${err}</div></div>
+  <p class="sub" style="font-size:13px">${N} questions · ${CONFIG.DURATION/60} minutes · timer starts when you press START</p>
+  <button class="btn big" onclick="startTest()">START TEST</button></div>`;
+}
+function startTest(){
+  const name=$("nm").value.trim(),cls=$("cl").value;
+  if(!name||!cls){$("er").textContent="Please enter your name and select your class.";return}
+  const bank=(cls==="6"||cls==="7")?"6-7":"8-9";
+  A={name,cls,bank,ans:Array(N).fill(null),cur:0,start:Date.now(),sw:0,done:false};
+  lsSet("rc_active",A);lastResult=null;startTimer();renderTest();
+}
+function remaining(){return CONFIG.DURATION-(Date.now()-A.start)/1000}
+function startTimer(){clearInterval(tick);tick=setInterval(()=>{if(!A||A.done)return;const r=remaining();if(r<=0)return submit(true);paintTimer(r)},250)}
+function paintTimer(r){const t=$("tm");if(!t)return;t.textContent=mmss(Math.ceil(r));t.className="timer "+(r>120?"":r>30?"warn":"urgent")}
+function renderTest(){
+  const Q=BANKS[A.bank][A.cur],ans=A.ans[A.cur];
+  app.innerHTML=`${tabWarn?`<div class="warnbar">⚠️ You left this tab during the test (${A.sw} time${A.sw>1?"s":""}). Please stay on this page. <button class="btn sm sec" onclick="tabWarn=false;renderTest()">Dismiss</button></div>`:""}
+  <div class="card"><div class="top"><div><h1 style="font-size:26px">SPECTRA</h1><p class="sub"><b>Class ${A.cls}</b> | Question ${A.cur+1} of ${N}</p></div><div class="timer" id="tm">--:--</div></div>
+  <div class="bar"><i style="width:${(A.cur+1)/N*100}%"></i></div><div class="sub">Question ${A.cur+1} / ${N}</div>
+  <div class="grid"><div><h2 style="color:var(--tx);font-size:19px;line-height:1.4">${A.cur+1}. ${esc(Q[0])}</h2>
+  ${Q[1].map((o,i)=>`<button class="opt ${ans===L[i]?"sel":""}" onclick="pick('${L[i]}')"><b>${L[i]}</b><span>${esc(o)}</span></button>`).join("")}</div>
+  <div><label style="margin-top:0">Questions</label><div class="nav">${A.ans.map((a,i)=>`<button class="${i===A.cur?"cur":a?"ans":""}" onclick="jump(${i})">${i+1}</button>`).join("")}</div>
+  <p class="sub" style="font-size:12px">Answered: ${A.ans.filter(Boolean).length}/${N}</p></div></div>
+  <div class="row"><button class="btn sec" ${A.cur===0?"disabled":""} onclick="jump(${A.cur-1})">← Previous</button>
+  ${A.cur<N-1?`<button class="btn" onclick="jump(${A.cur+1})">Next →</button>`:""}<button class="btn red" onclick="confirmSubmit()">SUBMIT TEST</button></div></div>`;
+  paintTimer(remaining());
+}
+function pick(l){A.ans[A.cur]=l;lsSet("rc_active",A);renderTest()}
+function jump(i){A.cur=i;lsSet("rc_active",A);renderTest()}
+function showModal(h){$("modal").innerHTML=`<div class="modalbg" onclick="if(event.target===this)closeModal()"><div class="card modal">${h}</div></div>`}
+function closeModal(){$("modal").innerHTML=""}
+function confirmSubmit(){
+  const n=A.ans.filter(Boolean).length;
+  showModal(`<h2 style="margin-top:0">Submit Test?</h2><p>${n===N?"Are you sure you want to submit your test?":`You have answered ${n} out of ${N} questions.`}</p><p class="sub">You cannot change your answers after submitting.</p>
+  <div class="row"><button class="btn sec" onclick="closeModal()">Continue Test</button><button class="btn red" onclick="submit(false)">Submit Test</button></div>`);
+}
+let submitting=false;
+function submit(auto){
+  if(submitting||!A||A.done)return;submitting=true;clearInterval(tick);closeModal();
+  const Q=BANKS[A.bank];let c=0,w=0,u=0;
+  A.ans.forEach((a,i)=>{if(!a)u++;else if(a===Q[i][2])c++;else w++});
+  const time=auto?CONFIG.DURATION:Math.min(CONFIG.DURATION,Math.round((Date.now()-A.start)/1000));
+  const rec={id:Date.now()+"-"+Math.random().toString(36).slice(2,7),name:A.name,cls:A.cls,bank:A.bank,answers:A.ans,correct:c,wrong:w,unanswered:u,marks:c,pct:+(c/N*100).toFixed(1),time,submittedAt:new Date().toISOString(),status:c>=getQual()?"Qualified":"Not Qualified",tabSwitches:A.sw};
+  const all=getResults();all.push(rec);lsSet("rc_results",all);
+  A.done=true;localStorage.removeItem("rc_active");lastResult=rec;A=null;submitting=false;renderResult();
+}
+function renderResult(){
+  const r=lastResult;
+  app.innerHTML=`<div class="card center" style="max-width:600px;margin:6vh auto"><h1>TEST COMPLETED</h1><p class="sub" style="font-size:20px">Thank you, ${esc(r.name)}!</p>
+  <p class="sub">Score</p><div class="score">${r.marks} / ${N}</div><p class="sub">Percentage</p><div style="font-size:30px;font-weight:700;color:var(--cy)">${r.pct}%</div>
+  <div class="stats"><div class="stat"><b>${r.correct}</b><span>Correct</span></div><div class="stat"><b>${r.wrong}</b><span>Wrong</span></div><div class="stat"><b>${r.unanswered}</b><span>Unanswered</span></div><div class="stat"><b>${mmss(r.time)}</b><span>Time Taken</span></div></div>
+  <p class="sub">Your answers have been recorded. Results will be announced by the organizers.</p>
+  <button class="btn sec" onclick="lastResult=null;err='';renderHome()">Back to Home</button></div>`;
+}
+/* Browser protections (deterrents only — they cannot make cheating impossible) */
+window.addEventListener("beforeunload",e=>{if(A&&!A.done){e.preventDefault();e.returnValue=""}});
+document.addEventListener("visibilitychange",()=>{if(document.hidden&&A&&!A.done){A.sw++;lsSet("rc_active",A);tabWarn=true}else if(!document.hidden&&A&&!A.done&&tabWarn)renderTest()});
+document.addEventListener("keydown",e=>{if(location.hash.startsWith("#/admin"))return});
+
+/* ============ ADMIN (#/admin) ============ */
+const F={cls:"all",st:"all",sort:"marks-desc",q:""};
+const isAdmin=()=>sessionStorage.getItem("rc_admin")==="1";
+function adminView(){isAdmin()?dash():login()}
+function login(msg){
+  app.innerHTML=`<div class="card center" style="max-width:420px;margin:10vh auto"><h1 style="font-size:30px">ORGANIZER ACCESS</h1>
+  <div style="text-align:left"><label>Username</label><input id="au" autocomplete="off"><label>Password</label><input id="ap" type="password" onkeydown="if(event.key==='Enter')doLogin()"><div class="err">${msg||""}</div></div>
+  <button class="btn big" onclick="doLogin()">LOGIN</button></div>`;
+}
+function doLogin(){
+  if($("au").value===CONFIG.ADMIN_USER&&$("ap").value===CONFIG.ADMIN_PASS){sessionStorage.setItem("rc_admin","1");dash()}else login("Invalid username or password.");
+}
+function logout(){sessionStorage.removeItem("rc_admin");login()}
+const byRank=(a,b)=>b.marks-a.marks||a.time-b.time;
+function enriched(){
+  const t=getQual(),all=getResults().map(r=>({...r,status:r.marks>=t?"Qualified":"Not Qualified"}));
+  const rk=new Map();[...all].sort(byRank).forEach((r,i)=>rk.set(r.id,i+1));
+  const qr=new Map();all.filter(r=>r.status==="Qualified").sort(byRank).forEach((r,i)=>qr.set(r.id,i+1));
+  return all.map(r=>({...r,rank:rk.get(r.id),qrank:qr.get(r.id)}));
+}
+function filtered(all){
+  let l=all.filter(r=>(F.cls==="all"||r.cls===F.cls)&&(F.st==="all"||r.status===F.st)&&r.name.toLowerCase().includes(F.q.toLowerCase()));
+  const s={"marks-desc":(a,b)=>byRank(a,b),"marks-asc":(a,b)=>a.marks-b.marks||b.time-a.time,"time":(a,b)=>a.time-b.time,"name":(a,b)=>a.name.localeCompare(b.name)}[F.sort];
+  return l.sort(s);
+}
+function dash(){
+  const all=enriched(),t=getQual(),q=all.filter(r=>r.status==="Qualified").length,cn=c=>all.filter(r=>r.cls===c).length;
+  const sel=(k,opts)=>`<select onchange="F.${k}=this.value;draw()">${opts.map(([v,l])=>`<option value="${v}" ${F[k]===v?"selected":""}>${l}</option>`).join("")}</select>`;
+  app.innerHTML=`<div class="top"><h1 style="font-size:clamp(20px,4vw,30px)">SPECTRA — QUALIFYING DASHBOARD</h1><button class="btn sec sm" onclick="logout()">Logout</button></div>
+  <div class="stats"><div class="stat"><b>${all.length}</b><span>Total Participants</span></div>${["6","7","8","9"].map(c=>`<div class="stat"><b>${cn(c)}</b><span>Class ${c}</span></div>`).join("")}
+  <div class="stat"><b style="color:var(--ok)">${q}</b><span>Qualified</span></div><div class="stat"><b style="color:var(--bad)">${all.length-q}</b><span>Not Qualified</span></div></div>
+  <div class="card"><div class="filters">
+  <div><label>Minimum qualifying score (/${N})</label><input type="number" min="0" max="${N}" value="${t}" onchange="setQ(this.value)"></div>
+  <div><label>Class</label>${sel("cls",[["all","All"],["6","6"],X])}</div>
+  <div><label>Status</label>${sel("st",[["all","All"],["Qualified","Qualified"],["Not Qualified","Not Qualified"]])}</div>
+  <div><label>Sort by</label>${sel("sort",[["marks-desc","Marks: Highest → Lowest"],["marks-asc","Marks: Lowest → Highest"],["time","Time: Fastest → Slowest"],["name","Name: A → Z"]])}</div>
+  <div><label>Search</label><input id="sq" placeholder="Search student name..." value="${esc(F.q)}" oninput="F.q=this.value;draw()"></div></div>
+  <div class="row" style="justify-content:flex-start"><button class="btn sm" onclick="exportCSV()">⬇ Export Results (CSV)</button><button class="btn sm red" onclick="confirmReset()">Reset / Delete All Results</button></div></div>
+  <div id="lists"></div>`;
+  draw();
+}
+function setQ(v){v=Math.max(0,Math.min(N,parseInt(v)||0));lsSet("rc_qualify",v);dash()}
+function draw(){
+  const all=enriched(),l=filtered(all),Q=l.filter(r=>r.status==="Qualified"),NQ=l.filter(r=>r.status!=="Qualified");
+  $("lists").innerHTML=`<h2>QUALIFIED STUDENTS (${Q.length})</h2><div class="card wrap"><table><tr><th>Rank</th><th>Name</th><th>Class</th><th>Marks</th><th>%</th><th>Time</th><th>Status</th></tr>
+  ${Q.map(r=>`<tr class="click" onclick="detail('${r.id}')"><td><b>${r.qrank}</b></td><td>${esc(r.name)}</td><td>${r.cls}</td><td>${r.marks}/${N}</td><td>${r.pct}%</td><td>${mmss(r.time)}</td><td><span class="pill q">QUALIFIED</span></td></tr>`).join("")||`<tr><td colspan="7" class="sub">No qualified students match.</td></tr>`}</table></div>
+  <h2>NOT QUALIFIED STUDENTS (${NQ.length})</h2>
+  ${NQ.map(r=>`<div class="nq" onclick="detail('${r.id}')"><b>${esc(r.name)} — Class ${r.cls}</b> <span class="pill n">NOT QUALIFIED</span><div class="m"><span>Marks: <b>${r.marks} / ${N}</b></span><span>${r.pct}%</span><span>Correct: <b>${r.correct}</b></span><span>Wrong: <b>${r.wrong}</b></span><span>Unanswered: <b>${r.unanswered}</b></span><span>Time: <b>${mmss(r.time)}</b></span></div></div>`).join("")||`<p class="sub">No students match.</p>`}`;
+}
+function detail(id){
+  const r=enriched().find(x=>x.id===id);if(!r)return;const Q=BANKS[r.bank];
+  showModal(`<div class="top"><h2 style="margin:0">${esc(r.name)} — Class ${r.cls}</h2><button class="btn sm sec" onclick="closeModal()">Close</button></div>
+  <p class="sub">${r.marks}/${N} (${r.pct}%) · Time ${mmss(r.time)} · <span class="pill ${r.status==="Qualified"?"q":"n"}">${r.status.toUpperCase()}</span> · Rank ${r.rank}${r.tabSwitches?` · Tab switches: ${r.tabSwitches}`:""}<br>Submitted ${new Date(r.submittedAt).toLocaleString()}</p>
+  ${Q.map((q,i)=>{const a=r.answers[i],ok=a===q[2],k=!a?"u":ok?"c":"w";return `<div class="qa ${k}"><b>Question ${i+1}</b> <span class="sub">${esc(q[0])}</span><br>Student's answer: <b>${a||"Not Answered"}</b> · Correct answer: <b>${q[2]}</b><br>${!a?"— Unanswered":ok?"✅ Correct":"❌ Incorrect"}</div>`}).join("")}`);
+}
+function exportCSV(){
+  const rows=[["Rank","Name","Class","Marks","Percentage","Correct","Wrong","Unanswered","Time","Qualification Status"]];
+  enriched().sort(byRank).forEach(r=>rows.push([r.rank,r.name,r.cls,r.marks+"/"+N,r.pct+"%",r.correct,r.wrong,r.unanswered,mmss(r.time),r.status]));
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\r\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv"}));a.download="spectra-results.csv";a.click();
+}
+function confirmReset(){showModal(`<h2 style="margin-top:0">Delete all results?</h2><p>This permanently removes all ${getResults().length} participant records from this browser. Export a CSV first.</p><div class="row"><button class="btn sec" onclick="closeModal()">Cancel</button><button class="btn red" onclick="localStorage.removeItem('rc_results');dash();closeModal()">Delete Everything</button></div>`)}
+window.addEventListener("storage",()=>{if(isAdmin()&&location.hash.startsWith("#/admin")&&!$("modal").innerHTML)draw()});
+window.addEventListener("hashchange",route);route();
+</script></body></html>
